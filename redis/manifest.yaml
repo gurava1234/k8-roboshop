@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namemspace: roboshop
+  labels: # these labels are deployment lables
+    app: redis
+    project: roboshop
+    tier: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels: # these labels are used to find the pods
+      app: redis
+      project: roboshop
+      tier: db
+  template:
+    metadata:
+      labels: # these labels are pod labels
+        app: redis
+        project: roboshop
+        tier: db
+    spec:
+      containers:
+      - name: redis
+        image: guru/redis:v1
+        imagePullPolicy: Always
+         envFrom:
+         - configMapRef:
+           name: redis
+
+------
+apiVersion: v1
+kind: service
+metadata:
+  name: redis
+  namespace: roboshop
+spec: 
+  selector:
+    app: redis
+    project: roboshop
+    tier: db
+  ports:
+  - protocol: TCP
+    port: 6379 #service-port
+    targetport: 6379  #container-port
