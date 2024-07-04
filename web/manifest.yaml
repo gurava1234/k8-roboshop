@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namemspace: roboshop
+  labels: # these labels are deployment lables
+    app: web
+    project: roboshop
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels: # these labels are used to find the pods
+      app: web
+      project: roboshop
+      tier: web
+  template:
+    metadata:
+      labels: # these labels are pod labels
+        app: web
+        project: roboshop
+        tier: web
+    spec:
+      containers:
+      - name: web
+        image: guru/web:v1
+        imagePullPolicy: Always
+        #  envFrom:
+        #  - configMapRef:
+        #    name: web
+
+------
+apiVersion: v1
+kind: service
+metadata:
+  name: web
+  namespace: roboshop
+spec: 
+  type: LoadBalancer
+  selector:
+    app: web
+    project: roboshop
+    tier: web
+  ports:
+  - protocol: TCP
+    port: 8080 #service-port
+    targetport: 8080  #container-port
