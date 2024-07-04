@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongodb
-  nemspace: roboshop
+  namemspace: roboshop
   labels: # these labels are deployment lables
     app: mongodb
     project: roboshop
