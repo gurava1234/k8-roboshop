@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  nemspace: roboshop
+  labels: # these labels are deployment lables
+    app: mongodb
+    project: roboshop
+    tier: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels: # these labels are used to find the pods
+      app: mongodb
+      project: roboshop
+      tier: db
+  template:
+    metadata:
+      labels: # these labels are pod labels
+        app: mongodb
+        project: roboshop
+        tier: db
+    spec:
+      containers:
+      - name: mongodb
+        image: guru/mongodb:v1
+        imagePullPolicy: Always
+--------
+apiVersion: v1
+kind: service
+metadata:
+  name: mongodb
+  namespace: roboshop
+spec: 
+  selector:
+    app: mongodb
+    project: roboshop
+    tier: db
+  ports:
+  - protocol: TCP
+    port: 27017 #service-port
+    targetport: 27017  #container-port
