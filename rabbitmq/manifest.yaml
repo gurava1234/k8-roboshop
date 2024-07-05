@@ -1,66 +1,60 @@
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mysql
-  namespace: roboshop
-data:
-  MYSQL_DATABASE: "cities" 
------
-apiVersion: v1
 kind: secret
 metadata:
-  name: mysql
+  name: rabbitmq
   namespace: roboshop
 type: Opaque  
 data:
-  MYSQL_ROOT_PASSWORD: Um9ib1Nob3BAMQ== 
-  MYSQL_USER: c2hpcHBpbmc= 
-  MYSQL_PASSWORD: Um9ib1Nob3BAMQ==
------
+  RABBITMQ_DEFAULT_USER: cm9ib3Nob3A=
+  RABBITMQ_DEFAULT_PASS: cm9ib3Nob3AxMjM=
+-------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql
+  name: rabbitmq
   namemspace: roboshop
   labels: # these labels are deployment lables
-    app: mysql
+    app: rabbitmq
     project: roboshop
     tier: db
 spec:
   replicas: 1
   selector:
     matchLabels: # these labels are used to find the pods
-      app: mysql
+      app: rabbitmq
       project: roboshop
       tier: db
   template:
     metadata:
       labels: # these labels are pod labels
-        app: mysql
+        app: rabbitmq
         project: roboshop
         tier: db
     spec:
       containers:
-      - name: mysql
-        image: guru/mysql:v1
+      - name: rabbitmq
+        image: guru/rabbitmq:v1
         imagePullPolicy: Always
-        envFrom: 
-        - configMapRef: 
-            name: mysql 
-        - secretRef:
-            name: mysql
---------
+         envFrom:
+         - configMapRef:
+           name: rabbitmq
+           envFrom:
+           - secretRef:
+               name: rabbitmq
+
+
+------
 apiVersion: v1
 kind: service
 metadata:
-  name: mysql
+  name: rabbitmq
   namespace: roboshop
 spec: 
   selector:
-    app: mysql
+    app: rabbitmq
     project: roboshop
     tier: db
   ports:
   - protocol: TCP
-    port: 3306 #service-port
-    targetport: 3306  #container-port
+    port: 5672 #service-port
+    targetport: 5672  #container-port
