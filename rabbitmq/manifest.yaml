@@ -35,12 +35,9 @@ spec:
       - name: rabbitmq
         image: guru/rabbitmq:v1
         imagePullPolicy: Always
-         envFrom:
-         - configMapRef:
-           name: rabbitmq
-           envFrom:
-           - secretRef:
-               name: rabbitmq
+        envFrom:
+        - secretRef:
+            name: rabbitmq
 
 
 ------
